@@ -24,7 +24,7 @@ header = {
     }
 
 s= requests.session()
-response = s.get(url= url ,headers=header)
+response = s.get(url = url ,headers=header)
 response.encoding='utf8'
 content = response.text
 from lxml import etree
