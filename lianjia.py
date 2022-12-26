@@ -9,3 +9,4 @@ soup = BeautifulSoup(response.text,'lxml')
 price_list = soup.find_all('em')
 for price in price_list:
     print(price.string)
+    print(price.get_text())
