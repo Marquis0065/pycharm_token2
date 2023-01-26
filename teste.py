@@ -1,6 +1,20 @@
 # #
+print(['{}*{}={}'.format(i,j,i*j) for i in range(1,10) for j in range(1,i+1)])
+for i in range(1,10):
+    for j in range(1,i+1):
+        print('%d*%d=%d '%(j,i,i*j),end='')
+    print()
 
-
+# import pymysql
+#
+# con = pymysql.connect(host='127.0.0.1',user='root',password='1qaz@WSX',database='cda')
+# cur = con.cursor()
+# sql = 'select * from dept'
+# result = cur.execute(sql)
+# print(result)
+# for i in cur.fetchall():
+#     print(i)
+# con.close()
 
 
 
