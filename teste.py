@@ -1,9 +1,148 @@
 # #
-print(['{}*{}={}'.format(i,j,i*j) for i in range(1,10) for j in range(1,i+1)])
-for i in range(1,10):
-    for j in range(1,i+1):
-        print('%d*%d=%d '%(j,i,i*j),end='')
-    print()
+
+# 邮件的标题,需要引入email库中header模块中的Header()函数。
+# 邮件的内容,需要引入email库中mime模块下text模块中的MIMEText()函数。
+# 邮件的发送者、接收者、服务器地址、端口号、账号、密码等，需要引入smtplib，使用SMTP_SSL()函数。
+from email.header import Header
+from email.mime.text import MIMEText
+import smtplib #SMTP协议客户端
+
+# 1定义邮箱服务器地址、端口、发件人账号、密码、收件人账号和邮件标题及邮件内容
+host = 'smtp.qq.com'
+port = 465
+user = '1071255432@qq.com'
+password = 'ebskndibyzbrbbfb'
+receiver = ['fzh006591@hotmail.com','fzh006591@sohu.com']
+title = 'pycharm邮件测式'
+text = 'python自动化发送，无需回复'
+# 2发送邮件，需要指定邮件正文，通过MIMEtext函数
+message = MIMEText(text,'plain','utf-8')
+#加入标题，及收件人
+message['Subject'] = Header(title,'utf-8')
+message['From'] = user
+message['To'] = ';'.join(receiver)
+#发送邮件
+smtp = smtplib.SMTP_SSL(host)
+smtp.connect(host,port)
+smtp.login(user,password)
+#发送，指定发件人账号，收件人账号，内容
+smtp.sendmail(user,receiver,message.as_string())
+# # 封闭函数
+# def auto_picture(io_from, name, io_to, col):
+#     '''
+#     函数功能：汇总多个工作簿，并绘制拆线图
+#     输出：含有拆线图的工作簿
+#     io_from ：目标文件夹的地址
+#     name:表中的列名，按哪个分组操作
+#     io_to:导出工作薄的名称
+#     col:
+#
+#
+#     '''
+#     import pandas as pd
+#     import os
+#     import matplotlib.pyplot as plt
+#     import xlwings as xw
+#
+#     # 设置绘图风格
+#     plt.style.use('seaborn')
+#     # 设置字体为黑色
+#     plt.rcParams['font.family'] = 'SimHei'
+#     # 显示符号
+#     plt.rcParams['axes.unicode_minus'] = False
+#
+#     df = pd.DataFrame()
+#     for i in os.listdir(r'{}'.format(io_from)):
+#
+#         if i.startswith('~$'):
+#             continue
+#         data = pd.read_excel(r"{}\{}".format(io_from, i))
+#         #         df1 = data.groupby('产品名称').agg({name:sum})
+#         df1 = data.groupby(name).agg({col: sum})
+#         df1.columns = [i.split('.')[0]]
+#         df = pd.concat([df, df1], axis=1)
+#     df.to_excel("半年{}.xlsx".format(io_to))
+#     fig = plt.figure(figsize=(8, 5))
+#     for i in df.index:
+#         plt.plot(df.columns, df.loc[i], marker='v')
+#     plt.title('产品半年统计表_{}'.format(io_to))
+#     plt.xlabel('月份')
+#     plt.ylabel(col)
+#     plt.legend(df.index)
+#
+#     # 把图形插入到表格中
+#
+#     app = xw.App(visible=False, add_book=False)
+#     book = app.books.open("半年{}.xlsx".format(io_to))
+#     sheet = book.sheets[0]
+#     # 插入图片，需要指定位置，left ,top
+#     sheet.pictures.add(fig, left=0, top=89)
+#     book.save()
+#     book.close()
+#     app.quit()
+# auto_picture("C:\Data\Jupyter_file\Python数据清洗基础\办公自动化\汇总多个工作簿数据\销售统计",
+#             '产品名称','利润表_4','销售利润（元）')
+# from  requests_html import HTMLSession
+# import pandas as pd
+# s = HTMLSession()
+# url = 'https://sz.lianjia.com/zufang/futianqu/pg1rt200600000001l1/#contentList'
+#
+# response = s.get(url)
+# print(response.status_code)
+# price = response.html.xpath('//em/text()')[:-2]
+# print(price)
+# s_price = pd.Series(price)
+# price(s_price)
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from pyecharts.charts import Bar
+import seaborn as sns
+
+# sns.set_theme(style="whitegrid")
+#
+# # Load the example planets dataset
+# planets = sns.load_dataset("planets")
+#
+# cmap = sns.cubehelix_palette(rot=-.2, as_cmap=True)
+# g = sns.relplot(
+#     data=planets,
+#     x="distance", y="orbital_period",
+#     hue="year", size="mass",
+#     palette=cmap, sizes=(10, 200),
+# )
+# g.set(xscale="log", yscale="log")
+# g.ax.xaxis.grid(True, "minor", linewidth=.25)
+# g.ax.yaxis.grid(True, "minor", linewidth=.25)
+# g.despine(left=True, bottom=True)
+# bar = Bar()
+# bar.add_xaxis(["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"])
+# bar.add_yaxis("商家A", [5, 20, 36, 10, 75, 90])
+# bar.add_yaxis("商家B", [7, 10, 46, 20, 65, 95])
+# # bar.render_notebook()
+# # bar.show_config()
+# bar.render('bar.html')
+# # np.random.seed(1)
+# data1 = {"x":["201{}".format(i) for i in range(10)],
+#         "y":np.random.randint(2000,5000,10)}
+# np.random.seed(2)
+# data2 = {"x":["201{}".format(i) for i in range(10)],
+#         "y":np.random.randint(2000,5000,10)}
+# plt.plot(data1['x'],data1['y'])
+# plt.figure()
+# plt.plot(data1['x'],data1['y'])
+# plt.show()
+# se1 = pd.Series([1,3,3,4,5],index=list('abcde'),dtype='int32',name='age')
+# print(type(se1))
+# print(se1)
+# arr = np.array([i for i in range(10)])
+# print(arr)
+# print(['{}*{}={}'.format(i,j,i*j) for i in range(1,10) for j in range(1,i+1)])
+# for i in range(1,10):
+#     for j in range(1,i+1):
+#         print('%d*%d=%d '%(j,i,i*j),end='')
+#     print()
 
 # import pymysql
 #
