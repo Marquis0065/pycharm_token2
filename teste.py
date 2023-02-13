@@ -1,32 +1,185 @@
-# #
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+#一行代码输出统计分析报告
+import pandas_profiling as pp
+
+from scipy import stats
+
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+import seaborn as sns
+from statsmodels.formula.api import ols
+from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
+import random
+d = np.random.randint(1,1000,1000)
+df = pd.DataFrame({'a':d,'b':d*2+1})
+print(df.head())
+result = ols('a~b',df).fit().summary()
+print(result)
 
 # 邮件的标题,需要引入email库中header模块中的Header()函数。
 # 邮件的内容,需要引入email库中mime模块下text模块中的MIMEText()函数。
 # 邮件的发送者、接收者、服务器地址、端口号、账号、密码等，需要引入smtplib，使用SMTP_SSL()函数。
-from email.header import Header
-from email.mime.text import MIMEText
-import smtplib #SMTP协议客户端
+# while True:
+#     from email.header import Header
+#     from email.mime.text import MIMEText
+#     import smtplib #SMTP协议客户端
+#     from  email.mime.multipart import MIMEMultipart
+#     import time
+#     import pymysql
+#     import pandas as pd
+#     import xlwings as xw
+#     import matplotlib.pyplot as plt
+#     import warnings
+#     warnings.filterwarnings('ignore')
+#     import seaborn as sns
+#
+#     #设置绘图风格
+#     # plt.style.use('seaborn')
+#     # #设置字体为黑色
+#     # plt.rcParams['font.family']='SimHei'
+#     # #显示符号
+#     # plt.rcParams['axes.unicode_minus']= False
+#
+#     #定时发送
+#     ehour = 20
+#     emin = 4
+#     esec = 0
+#     #获取当前时间进行对比,当前时区
+#     cur_time = time.localtime(time.time())
+#     today = time.strftime('%Y%m%d',cur_time)
+#     if (cur_time.tm_hour == ehour) and (cur_time.tm_min == emin) and (cur_time.tm_sec == esec):
+#         #创建数据库连接
+#         print('开始连接数据库。。。')
+#         conn = pymysql.connect(host='localhost',port=3306,user='root',passwd='1qaz@WSX',
+#                           database='cda3')
+#         cur = conn.cursor()
+#         sql_cus = 'select * from customer_detail'
+#
+#         sql_rep = 'select * from repayment_sum_month'
+#         customer = pd.read_sql(sql_cus,conn)
+#         repay = pd.read_sql(sql_rep,conn)
+#
+#         #找出逾期数据
+#         delay = repay[repay['当前最大逾期天数']>0]
+#         #计算账龄并添加逾期数据
+#         delay['账龄']=(pd.to_datetime(delay['当前日期']).dt.year-pd.to_datetime(delay['放款日期']).dt.year)*12+\
+#                       (pd.to_datetime(delay['当前日期']).dt.month - pd.to_datetime(delay['放款日期']).dt.month)
+#         #计算违约金额
+#         pivot_delay = pd.pivot_table(delay,index="放款月",columns="账龄",values="剩余本金",aggfunc="sum")
+#         # 计算每月的放款总金额
+#         customer["年月"] = customer["放款日期"].astype(str).str[:7]
+#         gp = customer.groupby("年月").agg({"合同金额": sum})  # 统计每月“通过量”的总量
+#         # 计算违约率
+#         result = pivot_delay.apply(lambda x: x / gp["合同金额"])
+#         # 修改result的列名和插入放款总金额并导出数据
+#         result.columns = ['mob_'+str(i) for i in result.columns]
+#         result.insert(0, "放款总金额", gp["合同金额"])
+#         result.to_excel("result_{}.xlsx".format(today))
+#         print("数据导出成功")
+#
+#         # 绘制图形
+#         fig1 = plt.figure(figsize=(10, 5))
+#         for i in result.index[1:-1]:
+#             plt.plot(result.columns[1:], result.loc[i, "mob_1":])
+#         plt.title("逾期数据趋势图")
+#         plt.xlabel("账龄")
+#         plt.ylabel("逾期率")
+#         plt.legend(result.index[1:-1])
+#         # 把绘制的图形插入到导出的数据表中
+#         app = xw.App(visible=False, add_book=False)
+#         book = app.books.open("result_{}.xlsx".format(today))
+#         book.sheets.add("折线图", after="Sheet1")  # 新增一个工作表
+#         sheet = book.sheets[1]  # 选定位置是1的工作表
+#         sheet.pictures.add(fig1, top=0, left=0)
+#         book.save("result_{}.xlsx".format(today))
+#         book.close()
+#         app.quit()
+#         # 关闭python和sql之间的链接
+#         conn.close()
+#         print("图形插入成功")
+#
+#         # 发送邮件
+#         # 1定义变量接收 邮箱服务器地址、端口、发件人账号、密码、收件人账号和邮件标题及邮件内容
+#         host_ = "smtp.qq.com"  # 服务器地址
+#         port_ = 465  # 端口号
+#         user_ = '1071255432@qq.com'  # 发件人账号
+#         password_ = 'ebskndibyzbrbbfb'  # 发件账号密码（授权码）
+#         receivers_ = ['fzh006591@hotmail.com', 'fzh006591@sohu.com']  # 收件人账号列表
+#         title_ = "账龄日报"  # 邮件标题
+#         text_ = """Dear All:
+#                                     附件是今天的账龄日报，请查收，有任何问题请联系我。
+#                                     这是pycharm发送的test邮件
+#                                     """  # 邮件正文
+#         # 2发送邮件，需要指定邮件正文，通过MIMEMultipart函数
+#         message = MIMEMultipart()  # 生成带有附件的邮件正文对象
+#         message["Subject"] = Header(title_, charset="utf-8")  # 添加邮件的主题到邮件正文对象中
+#         message["From"] = user_  # 添加发件邮箱到邮件对象
+#         message["To"] = ";".join(receivers_)  # #添加收件邮箱到邮件对象
+#         message.attach(MIMEText(text_, _subtype='plain', _charset="utf-8"))  # 带有带附件的正文内容
+#         # 构造附件
+#         att1 = MIMEText(open("result_{}.xlsx".format(today), 'rb').read(), "base64", 'utf-8')  # rb表示以二进制的形式读取数据
+#         att1["Content-Type"] = 'application/octet-stream'  # 八位组流协议
+#         att1["Content-Disposition"] = "attachment;filename=result_{}.xlsx".format(today)  # 附件
+#         message.attach(att1)
+#         # 发送邮件
+#         smtp = smtplib.SMTP_SSL(host_)  # 指定服务器地址
+#         smtp.connect(host_, port_)  # 链接到指定的服务器地址和端口号
+#         smtp.login(user_, password_)  # 进行身份验证
+#         smtp.sendmail(user_, receivers_, message.as_string())  # 参数包含发件人账号，收件人账号，邮件对象(数据类型要求字符串)
+#         print("邮件发送成功")
 
 # 1定义邮箱服务器地址、端口、发件人账号、密码、收件人账号和邮件标题及邮件内容
-host = 'smtp.qq.com'
-port = 465
-user = '1071255432@qq.com'
-password = 'ebskndibyzbrbbfb'
-receiver = ['fzh006591@hotmail.com','fzh006591@sohu.com']
-title = 'pycharm邮件测式'
-text = 'python自动化发送，无需回复'
-# 2发送邮件，需要指定邮件正文，通过MIMEtext函数
-message = MIMEText(text,'plain','utf-8')
-#加入标题，及收件人
-message['Subject'] = Header(title,'utf-8')
-message['From'] = user
-message['To'] = ';'.join(receiver)
-#发送邮件
-smtp = smtplib.SMTP_SSL(host)
-smtp.connect(host,port)
-smtp.login(user,password)
-#发送，指定发件人账号，收件人账号，内容
-smtp.sendmail(user,receiver,message.as_string())
+# from email.header import Header
+# from email.mime.text import MIMEText
+# import smtplib #SMTP协议客户端
+# from  email.mime.multipart import MIMEMultipart
+# host = 'smtp-mail.outlook.com'
+# port = 25
+# user = 'fzh006591@hotmail.com'
+# password = 'fzh18301705292'
+# receiver = ['10712554322@qq.com','fzh006591@sohu.com']
+# title = 'pycharm邮件测式'
+# text = 'python自动化发送，hotmail测试'
+# # 2发送邮件，需要指定邮件正文，通过MIMEtext函数
+# message = MIMEText(text,'plain','utf-8')
+# #加入标题，及收件人
+# message['Subject'] = Header(title,'utf-8')
+# message['From'] = user
+# message['To'] = ';'.join(receiver)
+# #发送邮件
+# smtp = smtplib.SMTP_SSL(host)
+#
+# smtp.connect(host,port)
+# smtp.login(user,password)
+# #发送，指定发件人账号，收件人账号，内容
+# smtp.sendmail(user,receiver,message.as_string())
+
+
+# # 1定义邮箱服务器地址、端口、发件人账号、密码、收件人账号和邮件标题及邮件内容
+# host = 'smtp.qq.com'
+# port = 465
+# user = '1071255432@qq.com'
+# password = 'ebskndibyzbrbbfb'
+# receiver = ['fzh006591@hotmail.com','fzh006591@sohu.com']
+# title = 'pycharm邮件测式'
+# text = 'python自动化发送，无需回复'
+# # 2发送邮件，需要指定邮件正文，通过MIMEtext函数
+# message = MIMEText(text,'plain','utf-8')
+# #加入标题，及收件人
+# message['Subject'] = Header(title,'utf-8')
+# message['From'] = user
+# message['To'] = ';'.join(receiver)
+# #发送邮件
+# smtp = smtplib.SMTP_SSL(host)
+# smtp.connect(host,port)
+# smtp.login(user,password)
+# #发送，指定发件人账号，收件人账号，内容
+# smtp.sendmail(user,receiver,message.as_string())
+
+
 # # 封闭函数
 # def auto_picture(io_from, name, io_to, col):
 #     '''
@@ -93,12 +246,12 @@ smtp.sendmail(user,receiver,message.as_string())
 # print(price)
 # s_price = pd.Series(price)
 # price(s_price)
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-from pyecharts.charts import Bar
-import seaborn as sns
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+# from pyecharts.charts import Bar
+# import seaborn as sns
 
 # sns.set_theme(style="whitegrid")
 #
@@ -269,7 +422,7 @@ import seaborn as sns
 # print(type(x for x in range(6)))
 # print(type((x for x in range(6))))
 
-from bs4 import *
+# from bs4 import *
 # def add(x,y):
 #     return x+y
 # print(add(1,2))
