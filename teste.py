@@ -3,21 +3,146 @@ import numpy as np
 import pandas as pd
 #一行代码输出统计分析报告
 import pandas_profiling as pp
-
 from scipy import stats
-
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-
 import seaborn as sns
 from statsmodels.formula.api import ols
 from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
-import random
-d = np.random.randint(1,1000,1000)
-df = pd.DataFrame({'a':d,'b':d*2+1})
-print(df.head())
-result = ols('a~b',df).fit().summary()
-print(result)
+# from pyecharts import options as opts
+# from pyecharts.charts import Scatter
+# from pyecharts.commons.utils import JsCode
+# from pyecharts.faker import Faker
+
+
+#pyecharts画图
+# c = Scatter()
+# c.add_xaxis(Faker.choose())
+# c.add_yaxis(
+#         "商家A",
+#         [list(z) for z in zip(Faker.values(), Faker.choose())],
+#         label_opts=opts.LabelOpts(
+#             formatter=JsCode(
+#                 "function(params){return params.value[1] +' : '+ params.value[2];}"
+#             )
+#         ),
+#     )
+# c.set_global_opts(
+#         title_opts=opts.TitleOpts(title="Scatter-多维度数据"),
+#         tooltip_opts=opts.TooltipOpts(
+#             formatter=JsCode(
+#                 "function (params) {return params.name + ' : ' + params.value[2];}"
+#             )
+#         ),
+#         visualmap_opts=opts.VisualMapOpts(
+#             type_="color", max_=150, min_=20, dimension=1
+#         ),
+#     )
+# # c.render_notebook();
+# c.render("scatter_multi_dimension11140210.html")
+
+# data_raw = pd.read_excel(r"C:\Data\Jupyter_file\统计建模\LR_practice.xlsx")
+# #删除无用变量，ID，Acc,edad2
+# data_raw.drop(['id','Acc','edad2'],axis=1,inplace=True)
+# #缺失值填补，均值或中位数填补，分类变量用众数填补
+# #分类变量处理,字符串需要先编码,二分类变量可以直接用map映射方法
+# data_raw['gender'] = data_raw['gender'].map({'Male':1,'Female':0})
+# #计算均值
+# data_raw['avg_exp'].fillna(data_raw['avg_exp'].mean(),inplace=True)
+# label = data_raw['edu_class'].unique().tolist()
+# data_raw['edu_class'] = data_raw['edu_class'].apply(lambda x:label.index(x))
+# #3倍标准差 stats.zscore()
+# z_age = stats.zscore(data_raw['Age'])
+# #寻找异常数据
+# # z_age[(z_age>3)|(z_age<-3)]
+# # data_raw['Age'].iloc[40] #引年龄结果是999异常
+# #可以用均值代替 data_raw['Age'] 包含异常值，一般不用
+# data_raw['Age'].drop(index=40).mean() #去除异常值
+# data_raw['Age'].iloc[40] = data_raw['Age'].drop(index=40).mean()
+# #哑变量转换 prefic修改列名,drop_first 删除
+# dummy = pd.get_dummies(data_raw['edu_class'],prefix='edu',drop_first=True)
+# data = pd.concat([data_raw,dummy],axis=1)
+#
+# #建立模型
+# formula = 'avg_exp ~ gender+Age+Income+Ownrent+Selfempl+dist_home_val+dist_avg_income+edu_1+edu_2+edu_3+edu_4'
+# #实例化
+# model = ols(formula=formula,data = data)
+# #拟合模型
+# result = model.fit()
+#
+# #常用接口
+# # model.df_resid
+# # #调取残差序列
+# # result.resid
+# # data_vif = data.drop('avg_exp',axis=1)
+# # data_vif['Inter'] = 1
+# # data_vif.drop(['edu_1','edu_2','edu_3','edu_4'],axis = 1,inplace = True)
+# # data_vif.head()
+#
+# #查看第几个变量的VIF: 1-3,无需处理，3-10，处理，大于10，不可用
+# #Income  和dist_avg_Income 删除其中一个
+# data2 = data
+# data2.drop('Income',axis = 1 ,inplace = True)
+# # data2.head()
+# # for i in range(0,data_vif.shape[1]):
+# #     data_vif.columns[i] , vif(data_vif,i)
+#
+# #重新拟合模型
+# formula2 = 'avg_exp ~ gender+Age+Ownrent+Selfempl+dist_home_val+dist_avg_income+edu_1+edu_2+edu_3+edu_4'
+# #实例化
+# model2 = ols(formula=formula2,data = data2)
+# #拟合模型
+# result2 = model2.fit()
+#
+# #绘制残差图,如果出现叭状，先对Y对对数
+# # plt.scatter(result2.predict(data2),result2.resid)
+# # #正态性
+# # stats.probplot(result2.resid,plot = plt);
+#
+# #重新拟合模型
+# #因变量取对数
+# data3 = data2
+# data3['ln_avg_exp'] = np.log(data3['avg_exp'])
+# formula3 = 'ln_avg_exp ~ gender+Age+Ownrent+Selfempl+dist_home_val+dist_avg_income+edu_1+edu_2+edu_3+edu_4'
+# #实例化
+# model3 = ols(formula=formula3,data = data3)
+# #拟合模型
+# result3 = model3.fit()
+#
+# #加入（年龄）高次项
+# data4 = data3
+# data4['Age_sq'] = data4['Age']**2
+#
+# formula4 = 'ln_avg_exp ~ gender+Age_sq+Age+Ownrent+Selfempl+dist_home_val+dist_avg_income+edu_1+edu_2+edu_3+edu_4'
+# #实例化
+# model4 = ols(formula=formula4,data = data4)
+# #拟合模型
+# result4 = model4.fit()
+#
+# #加入（年龄性别）交互项
+# data5 = data4
+# data5['Age_gender'] = data5['Age']*data5['gender']
+#
+# formula5 = 'ln_avg_exp ~ gender+Age_sq+Age+Age_gender+Ownrent+Selfempl+dist_home_val+dist_avg_income+edu_1+edu_2+edu_3+edu_4'
+# #实例化
+# model5 = ols(formula=formula5,data = data5)
+# #拟合模型
+# result5 = model5.fit()
+# #输出结果
+# print(result5.summary())
+
+
+
+
+
+
+
+# import random
+# d = np.random.randint(1,1000,1000)
+# df = pd.DataFrame({'a':d,'b':d*2+1})
+# print(df.head())
+# result = ols('a~b',df).fit().summary()
+# print(result)
 
 # 邮件的标题,需要引入email库中header模块中的Header()函数。
 # 邮件的内容,需要引入email库中mime模块下text模块中的MIMEText()函数。
