@@ -9,7 +9,7 @@ plt.rcParams['font.family'] = ['Heiti TC']
 plt.rcParams['axes.unicode_minus'] = False
 import os
 os.chdir("C:\Data\Jupyter_file\机器学习")
-df=pd.read_csv("cities_11.csv")
+df=pd.read_csv("cities_11.csv",encoding='gbk')
 
 #获取要用的特征
 model_data=df.loc[:,"X1":]
@@ -25,6 +25,7 @@ pca=PCA(n_components=2)
 pca.fit(scaler_model_data)
 print("主成分的可解释的变异的比例\n",pca.explained_variance_ratio_)
 #实例化 对输入数据进行主成分的提取
+
 fa=FactorAnalysis.load_data_samples(
     scaler_model_data,
     preproc_demean=True,
