@@ -1,14 +1,19 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-#一行代码输出统计分析报告
-import pandas_profiling as pp
-from scipy import stats
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-import seaborn as sns
-from statsmodels.formula.api import ols
-from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
+# import xlwings as xw
+# wb = xw.Book(r"C:\Data\Jupyter_file\Python数据清洗基础\办公自动化\4、考勤统计\排班.xlsx")
+# wb.close()
+# print(wb.sheets)
+
+# import matplotlib.pyplot as plt
+# import numpy as np
+# import pandas as pd
+# #一行代码输出统计分析报告
+# import pandas_profiling as pp
+# from scipy import stats
+# import statsmodels.api as sm
+# import statsmodels.formula.api as smf
+# import seaborn as sns
+# from statsmodels.formula.api import ols
+# from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
 # from pyecharts import options as opts
 # from pyecharts.charts import Scatter
 # from pyecharts.commons.utils import JsCode
