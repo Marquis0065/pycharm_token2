@@ -1,3 +1,7 @@
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse('Hello World')
 # import xlwings as xw
 # wb = xw.Book(r"C:\Data\Jupyter_file\Python数据清洗基础\办公自动化\4、考勤统计\排班.xlsx")
 # wb.close()
